@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlignScope — MARL Alignment Observability Dashboard</title>
+    <meta name="description" content="Real-time alignment observability for any multi-agent reinforcement learning system. Track coalition formation, role specialization, and defection events across episodes.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="header-left">
+            <h1 class="logo">Align<span class="logo-accent">Scope</span></h1>
+            <span class="header-divider"></span>
+            <span class="header-subtitle">MARL alignment observability</span>
+        </div>
+        <div class="header-center">
+            <div class="status-group">
+                <div class="status-item" id="tick-display">
+                    <span class="status-label">Tick</span>
+                    <span class="status-value mono" id="tick-value">0</span>
+                </div>
+                <div class="status-item" id="alignment-display">
+                    <span class="status-label">Alignment</span>
+                    <span class="status-value mono" id="alignment-value">—</span>
+                </div>
+                <div class="status-item" id="events-display">
+                    <span class="status-label">Events</span>
+                    <span class="status-value mono" id="events-count">0</span>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-secondary" id="btn-restart" title="Restart with new seed">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                Restart
+            </button>
+            <div class="connection-status" id="connection-status">
+                <span class="connection-dot"></span>
+                <span class="connection-text">Connecting</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout: 3 panels -->
+    <main id="main-layout">
+        <!-- Left: Topology Graph -->
+        <section class="panel panel-topology" id="panel-topology">
+            <div class="panel-header">
+                <h2 class="panel-title">Agent Topology</h2>
+                <div class="panel-controls">
+                    <span class="panel-badge" id="topology-badge">0 nodes</span>
+                </div>
+            </div>
+            <div class="panel-body" id="topology-container">
+                <svg id="topology-svg"></svg>
+                <!-- Legend — dynamically populated from config -->
+                <div class="topology-legend" id="topology-legend">
+                    <div class="legend-section" id="legend-teams">
+                        <span class="legend-title">Teams</span>
+                        <!-- Populated dynamically by app.js -->
+                    </div>
+                    <div class="legend-section" id="legend-roles">
+                        <span class="legend-title">Roles</span>
+                        <!-- Populated dynamically by app.js -->
+                    </div>
+                    <div class="legend-section">
+                        <span class="legend-title">Edges</span>
+                        <div class="legend-item">
+                            <span class="legend-line" style="opacity: 0.3"></span>
+                            <span>Weak bond</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-line" style="opacity: 1"></span>
+                            <span>Strong bond</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right: Metrics Sidebar -->
+        <aside class="panel panel-metrics" id="panel-metrics">
+            <div class="panel-header">
+                <h2 class="panel-title" id="metrics-panel-title">Alignment Metrics</h2>
+            </div>
+            <div class="panel-body" id="metrics-container">
+                <!-- Overall Alignment Score -->
+                <div class="metric-card" id="metric-overall">
+                    <div class="metric-header">
+                        <span class="metric-name">Overall Alignment</span>
+                        <span class="metric-value mono" id="metric-overall-value">—</span>
+                    </div>
+                    <div class="metric-bar-container">
+                        <div class="metric-bar" id="metric-overall-bar"></div>
+                    </div>
+                </div>
+
+                <!-- Team metric sections — dynamically generated by app.js -->
+                <div id="team-metrics-container"></div>
+
+                <!-- Sparkline area for alignment history -->
+                <div class="metric-card" id="metric-history">
+                    <div class="metric-header">
+                        <span class="metric-name">Alignment History</span>
+                    </div>
+                    <div class="sparkline-container">
+                        <canvas id="alignment-sparkline" width="280" height="80"></canvas>
+                    </div>
+                </div>
+
+                <!-- Agent detail panel (shown on node click) -->
+                <div class="metric-card agent-detail hidden" id="agent-detail">
+                    <div class="metric-header">
+                        <span class="metric-name">Agent <span id="detail-agent-id">—</span></span>
+                        <button class="btn-close" id="btn-close-detail">&times;</button>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Team</span>
+                        <span class="metric-val mono" id="detail-team">—</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Role</span>
+                        <span class="metric-val mono" id="detail-role">—</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Role Stability</span>
+                        <span class="metric-val mono" id="detail-stability">—</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Coalition</span>
+                        <span class="metric-val mono" id="detail-coalition">—</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Status</span>
+                        <span class="metric-val" id="detail-status">Active</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Bottom: Defection Timeline -->
+    <section class="panel panel-timeline" id="panel-timeline">
+        <div class="panel-header">
+            <h2 class="panel-title" id="timeline-panel-title">Event Timeline</h2>
+            <span class="panel-badge" id="timeline-badge">0 events</span>
+        </div>
+        <div class="panel-body timeline-body" id="timeline-container">
+            <canvas id="timeline-canvas"></canvas>
+            <!-- Event detail tooltip -->
+            <div class="timeline-tooltip hidden" id="timeline-tooltip">
+                <div class="tooltip-header" id="tooltip-header">—</div>
+                <div class="tooltip-body" id="tooltip-body">—</div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="/js/app.js?v=2"></script>
+    <script src="/js/topology.js?v=2"></script>
+    <script src="/js/timeline.js?v=2"></script>
+    <script src="/js/metrics.js?v=2"></script>
+</body>
+</html>
