@@ -18,6 +18,7 @@ python examples/pettingzoo_example.py # Rock-Paper-Scissors
 
 Open **http://localhost:8000** and watch agents interact live.
 
+https://github.com/user-attachments/assets/586eb948-2cea-4a19-9677-42c771b7da4f
 
 ## Why AlignScope?
 
