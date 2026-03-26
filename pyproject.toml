@@ -10,7 +10,7 @@ readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.9"
 authors = [
-    { name = "AlignScope Team" },
+    { name = "Nithisha", email = "nithisha2201@gmail.com" },
 ]
 keywords = ["marl", "multi-agent", "reinforcement-learning", "alignment", "observability", "dashboard"]
 classifiers = [
@@ -45,9 +45,9 @@ dev = ["pytest", "httpx"]
 alignscope = "alignscope.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/alignscope/alignscope"
-Documentation = "https://github.com/alignscope/alignscope#readme"
-Repository = "https://github.com/alignscope/alignscope"
+Homepage = "https://github.com/raghavarajunithisha-lab/AlignScopeV1"
+Documentation = "https://github.com/raghavarajunithisha-lab/AlignScopeV1#readme"
+Repository = "https://github.com/raghavarajunithisha-lab/AlignScopeV1"
 
 [tool.hatch.build.targets.wheel]
 packages = ["alignscope"]
