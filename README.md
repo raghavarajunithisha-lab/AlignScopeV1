@@ -72,13 +72,40 @@ Launch the real-time visualization server:
 alignscope start
 ```
 
-Open your browser to `http://localhost:8000`.
+Open **http://localhost:8000** and watch agents interact live.
 
-### Instrumenting Your Code
 
-AlignScope works out-of-the-box with **PettingZoo**, **RLlib**, **SMAC**, and **EPyMARL**.
+## Why AlignScope?
 
-**Example: Zero-Code PettingZoo Wrapper**
+Training MARL agents is hard. Understanding *why* they succeed or fail is harder. Most researchers rely on reward curves and terminal logs — but those don't tell you:
+
+- **When** did cooperation break down?
+- **Which** agent defected, and why?
+- **How** are coalitions forming and dissolving over time?
+- **Are** agents actually specializing into useful roles?
+
+AlignScope answers all of these questions **visually and in real time**.
+
+### Key Advantages
+
+| Advantage | Description |
+|-----------|-------------|
+| **Zero-code integration** | One line (`alignscope.wrap(env)`) to instrument any PettingZoo environment |
+| **Environment agnostic** | Works with PettingZoo, SMAC, RLlib, EPyMARL, or any custom env |
+| **Real-time dashboard** | Watch agents move, form coalitions, and defect as training runs |
+| **Scientific precision** | Pinpoints the exact tick where cooperation fails |
+| **No vendor lock-in** | Forwards metrics to W&B and MLflow automatically if installed |
+| **Offline replay** | Replay saved CSV, JSON, NPZ, TensorBoard, or W&B logs into the dashboard |
+
+
+## Supported MARL Environments
+
+AlignScope is designed to work with **any** multi-agent system. Here are the environments with dedicated adapters:
+
+### 1. PettingZoo (Cooperative & Classic Games)
+
+PettingZoo is the most widely used MARL framework. AlignScope wraps **any** PettingZoo environment — AEC or Parallel API — with a single line.
+
 ```python
 import alignscope
 from pettingzoo.butterfly import knights_archers_zombies_v10
